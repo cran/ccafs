@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>CCAFS Amazon S3 Keys</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{CCAFS Amazon S3 Keys}
+%\VignetteEncoding{UTF-8}
+-->
+
+<h1>CCAFS Amazon S3 Keys</h1>
+
+<p>Keys used in this package are a bit opaque. To make it a bit more clear how
+keys link to the CCAFS web interface, the following is an example run through 
+the website to show you how a key is found. </p>
+
+<ol>
+<li>Navigate to <a href="http://ccafs-climate.org/">http://ccafs-climate.org/</a></li>
+<li>Navigate to Data -&gt; Spatial Downscaling</li>
+<li>On the left bar -&gt; File Set, select &ldquo;Delta Method IPCC AR5&rdquo; under the 
+&ldquo;Empirical/Statistical Downscaling&rdquo;</li>
+<li>On the left bar -&gt; Scenario, select &ldquo;RCP 2.6&rdquo;</li>
+<li>On the left bar -&gt; Model, select the &ldquo;bcc_csm1_1_m&rdquo;</li>
+<li>On the top bar -&gt; Extent, select &ldquo;Global&rdquo;</li>
+<li>On the top bar -&gt; Format, select &ldquo;ASCII Grid Format&rdquo;</li>
+<li>On the top bar -&gt; Period, select &ldquo;2030s&rdquo;</li>
+<li>On the top bar -&gt; Variable, select &ldquo;Precipitation&rdquo;</li>
+<li>On the top bar -&gt; Resolution, select &ldquo;10 minutes&rdquo;</li>
+<li>Click &ldquo;Search&rdquo;</li>
+<li>Click the box next to the file returned by the search, and clicked &ldquo;Generate Download Links&rdquo;</li>
+<li>Select &ldquo;Skip&rdquo;, or fill in your information</li>
+<li>Copy the address of the file to download (Right click -&gt; Copy Link Address)</li>
+<li>Assign the link address as a character string, removing the <code>http://cgiardata.s3.amazonaws.com/</code> (e.g., <code>http://cgiardata.s3.amazonaws.com/ccafs/ccafs-climate/data/ipcc_5ar_ciat_downscaled/rcp2_6/2030s/bcc_csm1_1_m/10min/bcc_csm1_1_m_rcp2_6_2030s_prec_10min_r1i1p1_no_tile_asc.zip</code> changes to <code>ccafs/ccafs-climate/data/ipcc_5ar_ciat_downscaled/rcp2_6/2030s/bcc_csm1_1_m/10min/bcc_csm1_1_m_rcp2_6_2030s_prec_10min_r1i1p1_no_tile_asc.zip</code>). </li>
+<li>Use the key as input to <code>cc_data_fetch()</code></li>
+</ol>
+
+</body>
+
+</html>

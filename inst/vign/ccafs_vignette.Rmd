@@ -1,0 +1,200 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{ccafs introduction}
+%\VignetteEncoding{UTF-8}
+-->
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.path = "img/"
+)
+```
+
+ccafs introduction
+==================
+
+`ccafs` provides access to Climate Change, Agriculture, and Food Security (CCAFS)
+General Circulation Models (GCM) data. Data is stored in Amazon S3, from
+which we provide functions to fetch data.
+
+Potential users are probably anyone from scientists asking questions about
+climate change, to scientists or companies projecting crop yields in the future.
+
+## Install
+
+CRAN version
+
+```{r eval=FALSE}
+install.packages("ccafs")
+```
+
+Dev version
+
+```{r eval=FALSE}
+devtools::install_github("ropensci/ccafs")
+```
+
+```{r}
+library("ccafs")
+```
+
+```{r echo=FALSE}
+cc_cache_delete_all()
+```
+
+## Search
+
+Search CCAFS
+
+You can search by the numbers representing each possible value for 
+each parameter. See the `?'ccafs-search'` for help on that.
+
+```{r}
+(res <- cc_search(file_set = 4, scenario = 6, model = 2, extent = "global",
+  format = "ascii", period = 5, variable = 2, resolution = 3))
+```
+
+Some saerches, like that above, result in one URL, while others, like that 
+below, result in many URLs.
+
+```{r}
+res <- cc_search(file_set = 12, extent = "global", format = "ascii",
+  period = 4, variable = 1, resolution = 4)
+length(res)
+res[1:5]
+```
+
+One we have some URLs, we can fetch the files at the URLs
+
+One at a time
+
+```{r}
+cc_data_fetch(res[1], progress = FALSE)
+```
+
+Or many at once
+
+```{r}
+lapply(res[1:3], cc_data_fetch, progress = FALSE)
+```
+
+Alternatively, you can use the helper list where you can reference options 
+by name; the downside is that this leads to very verbose code.
+
+```{r}
+(res <- cc_search(file_set = cc_params$file_set$`Delta method IPCC AR4`,
+                  scenario = cc_params$scenario$`SRES B1`,
+                  model = cc_params$model$bccr_bcm2_0,
+                  extent = cc_params$extent$global,
+                  format = cc_params$format$ascii,
+                  period = cc_params$period$`2040s`,
+                  variable = cc_params$variable$Precipitation,
+                  resolution = cc_params$resolution$`5 minutes`))
+```
+
+
+## List keys
+
+Keys are basically paths to files on Amazon S3's store of CCAFS files
+
+```{r}
+cc_list_keys()
+```
+
+Max keys
+
+```{r}
+cc_list_keys(max = 3)
+```
+
+Key prefix
+
+```{r}
+cc_list_keys(prefix = "ccafs/ccafs-climate/data/ipcc_5ar_ciat_downscaled/")
+```
+
+You can find certain files easily. Here, we'll find zip files
+
+```{r}
+res <- cc_list_keys()
+zips <- grep("\\.zip", res$Key, value = TRUE)
+zips[1:5]
+```
+
+Which you can use below to fetch data from.
+
+
+## Fetch some data
+
+```{r}
+key <- "ccafs/ccafs-climate/data/ipcc_5ar_ciat_downscaled/rcp2_6/
+  2030s/bcc_csm1_1_m/10min/
+  bcc_csm1_1_m_rcp2_6_2030s_prec_10min_r1i1p1_no_tile_asc.zip"
+```
+
+```{r echo=FALSE}
+(res <- cc_data_fetch(key = key, progress = FALSE))
+```
+
+```{r eval=FALSE}
+(res <- cc_data_fetch(key = key, progress = FALSE))
+```
+
+Using the above set of zips, fetch some data:
+
+```{r}
+x <- cc_data_fetch(zips[1], progress = FALSE)
+cc_data_read(x[1])
+```
+
+
+### Caching
+
+When requesting data, we first check if you already have that data cached.
+You'll know when this happens as the request will finish much faster when
+you have data cached already.
+
+You can list cached files
+
+```{r}
+cc_cache_list()[1:10]
+```
+
+See `?cc_cache` for all the cache management functions.
+
+## Read data
+
+After fetching data, you need to read the data into a `RasterLayer` or
+`RasterBrick` object
+
+You can read a single file
+
+```{r}
+cc_data_read(res[1])
+```
+
+many files
+
+```{r}
+cc_data_read(res[1:2])
+```
+
+or all files
+
+```{r}
+cc_data_read(res)
+```
+
+## Visualize
+
+```{r fig.width=10, fig.height=8}
+library("raster")
+plot(cc_data_read(res[1:6]))
+```
+
+For more control over vizualizations of raster data, check out the
+[rasterVis](https://CRAN.R-project.org/package=rasterVis) package.

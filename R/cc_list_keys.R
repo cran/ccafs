@@ -12,24 +12,24 @@
 #' @param marker (character) string that specifies the key to start with when
 #' listing objects in a bucket. Amazon S3 returns object keys in alphabetical
 #' order, starting with key after the marker in order.
-#' @param ... Curl options passed on to \code{\link[crul]{HttpClient}}
+#' @param ... Curl options passed on to [crul::verb-GET]
 #' @return A tibble (a data.frame, basically), with the columms:
-#' \itemize{
-#'  \item Key - object key
-#'  \item LastModified - Object creation date or the last modified date, whichever is the latest.
-#'  \item ETag - "entity tag", used for cache validation
-#'  \item Size - Size of the object, in bytes, divide by 10^6 to get
-#'  mb (megabytes)
-#'  \item StorageClass - ignore, just useful for CCAFS maintainers
-#' }
+#' 
+#' - Key - object key
+#' - LastModified - Object creation date or the last modified date,
+#' whichever is the latest.
+#' - ETag - "entity tag", used for cache validation
+#' - Size - Size of the object, in bytes, divide by 10^6 to get
+#' mb (megabytes)
+#' - StorageClass - ignore, just useful for CCAFS maintainers
+#' 
 #' @details This function lists keys from the CCAFS Amazon S3 bucket.
 #' Keys are essentially file paths. You can request data from any key that is
 #' a file (with a file extension, and has size > 0). Other keys are
 #' directories.
-#' @examples
+#' @examples \dontrun{
 #' cc_list_keys(max = 1)
 #'
-#' \dontrun{
 #' cc_list_keys()
 #' cc_list_keys(max = 10)
 #' cc_list_keys(prefix = "ccafs/ccafs-climate/data/ipcc_5ar_ciat_downscaled/")
@@ -44,5 +44,5 @@ cc_list_keys <- function(prefix = NULL, delimiter = NULL, max = 1000,
   tmp <- parsxml(cc_GET(ccafs_base(), query = args, ...))
   df <- data.table::setDF(data.table::rbindlist(tmp, fill = TRUE,
                                                 use.names = TRUE))
-  tibble::as_data_frame(df)
+  tibble::as_tibble(df)
 }

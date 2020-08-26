@@ -4,9 +4,17 @@
 \alias{cc_search}
 \title{Search CCAFS data}
 \usage{
-cc_search(file_set = NULL, scenario = NULL, model = NULL, extent = NULL,
-  format = NULL, period = NULL, variable = NULL, resolution = NULL,
-  tile = NULL)
+cc_search(
+  file_set = NULL,
+  scenario = NULL,
+  model = NULL,
+  extent = NULL,
+  format = NULL,
+  period = NULL,
+  variable = NULL,
+  resolution = NULL,
+  tile = NULL
+)
 }
 \arguments{
 \item{file_set}{(integer) a file set, 2 through 12}
@@ -35,19 +43,19 @@ character strings, one or more urls
 Search CCAFS data
 }
 \details{
-See \code{\link{ccafs-search}} for details on parameters.
+See \link{ccafs-search} for details on parameters.
 
 note that some URLs will be for Amazon S3 and others will have different
 base URLS (e.g., http://gisweb.ciat.cgiar.org)
 
-Output can be passed to \code{\link{cc_data_fetch}}, and subsequently to
-\code{\link{cc_data_read}}
+Output can be passed to \code{\link[=cc_data_fetch]{cc_data_fetch()}}, and subsequently to
+\code{\link[=cc_data_read]{cc_data_read()}}
 }
 \examples{
+\dontrun{
 (res <- cc_search(file_set = 12, extent = "global", format = "ascii",
   period = 4, variable = 1, resolution = 4))
 
-\dontrun{
 res <- cc_search(file_set = 7, extent = "region", format = "ascii",
   period = 9, variable = 5, resolution = 6)
 cc_data_fetch(res[3])

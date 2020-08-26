@@ -4,8 +4,7 @@
 \alias{cc_list_keys}
 \title{List CCAFS keys}
 \usage{
-cc_list_keys(prefix = NULL, delimiter = NULL, max = 1000, marker = NULL,
-  ...)
+cc_list_keys(prefix = NULL, delimiter = NULL, max = 1000, marker = NULL, ...)
 }
 \arguments{
 \item{prefix}{(character) string that limits the response to keys that begin
@@ -23,17 +22,18 @@ for more detail.}
 listing objects in a bucket. Amazon S3 returns object keys in alphabetical
 order, starting with key after the marker in order.}
 
-\item{...}{Curl options passed on to \code{\link[crul]{HttpClient}}}
+\item{...}{Curl options passed on to \link[crul:verb-GET]{crul::verb-GET}}
 }
 \value{
 A tibble (a data.frame, basically), with the columms:
 \itemize{
- \item Key - object key
- \item LastModified - Object creation date or the last modified date, whichever is the latest.
- \item ETag - "entity tag", used for cache validation
- \item Size - Size of the object, in bytes, divide by 10^6 to get
- mb (megabytes)
- \item StorageClass - ignore, just useful for CCAFS maintainers
+\item Key - object key
+\item LastModified - Object creation date or the last modified date,
+whichever is the latest.
+\item ETag - "entity tag", used for cache validation
+\item Size - Size of the object, in bytes, divide by 10^6 to get
+mb (megabytes)
+\item StorageClass - ignore, just useful for CCAFS maintainers
 }
 }
 \description{
@@ -46,9 +46,9 @@ a file (with a file extension, and has size > 0). Other keys are
 directories.
 }
 \examples{
+\dontrun{
 cc_list_keys(max = 1)
 
-\dontrun{
 cc_list_keys()
 cc_list_keys(max = 10)
 cc_list_keys(prefix = "ccafs/ccafs-climate/data/ipcc_5ar_ciat_downscaled/")
